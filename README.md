@@ -1,2 +1,2 @@
 # swagger-helper
-Swagger helper inspired from https://github.com/nestjsx/crud
+Swagger helper inspired from nestjsx/crud and nestjs/swagger
