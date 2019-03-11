@@ -131,3 +131,12 @@ export function setSwaggerOperation(func: Function, options: OperationOptions) {
     const meta = Reflect.getMetadata(Constants.DECORATORS.API_OPERATION, func) || {};
     Reflect.defineMetadata(Constants.DECORATORS.API_OPERATION, _.assign(meta, options), func);
 }
+
+export function setSwaggerUseTags(func: Function, ...tags: string[]) {
+    if (!Constants) {
+        return;
+    }
+
+    const meta = Reflect.getMetadata(Constants.DECORATORS.API_USE_TAGS, func) || [];
+    Reflect.defineMetadata(Constants.DECORATORS.API_USE_TAGS, [...meta, ...tags], func);
+}
