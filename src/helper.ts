@@ -51,111 +51,113 @@
  * ----------- 永 无 BUG ------------
  */
 import 'reflect-metadata';
-import {Constants} from './swagger';
-import {ApiImplicitOptions, ModelPropertyOptions, OperationOptions, ResponseOptions} from './interfaces';
+import { Constants } from './swagger';
+import { ApiImplicitOptions, ModelPropertyOptions, OperationOptions, ResponseOptions } from './interfaces';
 import * as _ from 'lodash';
 
 let helpers: typeof import('@nestjs/swagger/dist/decorators/helpers');
 try {
-    helpers = require('@nestjs/swagger/dist/decorators/helpers');
+  helpers = require('@nestjs/swagger/dist/decorators/helpers');
 } catch (ignored) {
 }
 
 export function setSwagger(func: Function, ...params: ApiImplicitOptions[]) {
-    if (!Constants) {
-        return;
-    }
+  if (!Constants) {
+    return;
+  }
 
-    for (const param of params) {
-        switch (param.in) {
-            case 'body':
-                const [type, isArray] = helpers.getTypeIsArrayTuple(param.type, param.isArray);
-                param.type = type;
-                param.isArray = isArray;
-                break;
-            case 'query':
-                if (param.enum) {
-                    param.type = String;
-                }
-
-                if (param.isArray) {
-                    param.type = Array;
-                    if (param.enum) {
-                        param.items = {
-                            type: 'String',
-                            enum: param.enum
-                        };
-                        param.collectionFormat = 'multi';
-                        param.enum = undefined;
-                    } else {
-                        param.items = {
-                            type: param.type
-                        };
-                        param.collectionFormat = _.isNil(param.collectionFormat) ? 'csv' : param.collectionFormat;
-                    }
-                }
-                break;
-            case 'path':
-                break;
-            case 'header':
-                param.type = String;
-                break;
+  for (const param of params) {
+    switch (param.in) {
+      case 'body':
+        const [type, isArray] = helpers.getTypeIsArrayTuple(param.type, param.isArray);
+        param.type = type;
+        param.isArray = isArray;
+        break;
+      case 'query':
+        if (param.enum) {
+          param.type = String;
         }
+
+        if (param.isArray) {
+          param.type = Array;
+          if (param.enum) {
+            param.items = {
+              type: 'String',
+              enum: param.enum,
+            };
+            param.collectionFormat = 'multi';
+            param.enum = undefined;
+          } else {
+            param.items = {
+              type: param.type,
+            };
+            param.collectionFormat = _.isNil(param.collectionFormat) ? 'csv' : param.collectionFormat;
+          }
+        }
+        break;
+      case 'path':
+        break;
+      case 'header':
+        param.type = String;
+        break;
     }
-    const metadata = Reflect.getMetadata(Constants.DECORATORS.API_PARAMETERS, func) || [];
-    Reflect.defineMetadata(Constants.DECORATORS.API_PARAMETERS, [...metadata, ...params], func);
+  }
+  const metadata = Reflect.getMetadata(Constants.DECORATORS.API_PARAMETERS, func) || [];
+  Reflect.defineMetadata(Constants.DECORATORS.API_PARAMETERS, [...metadata, ...params], func);
 }
 
 export function setSwaggerResponse(func: Function, options: ResponseOptions) {
-    if (!Constants) {
-        return;
-    }
+  if (!Constants) {
+    return;
+  }
 
-    const responses = Reflect.getMetadata(Constants.DECORATORS.API_RESPONSE, func) || {};
-    const groupedMetadata = {
-        [options.status]: {
-            type: options.type,
-            isArray: options.isArray,
-            description: options.description || '',
-            headers: options.headers
-        },
-    };
-    Reflect.defineMetadata(Constants.DECORATORS.API_RESPONSE, {...responses, ...groupedMetadata}, func);
+  const responses = Reflect.getMetadata(Constants.DECORATORS.API_RESPONSE, func) || {};
+  const groupedMetadata = {
+    [options.status]: {
+      type: options.type,
+      isArray: options.isArray,
+      description: options.description || '',
+      headers: options.headers,
+    },
+  };
+  Reflect.defineMetadata(Constants.DECORATORS.API_RESPONSE, { ...responses, ...groupedMetadata }, func);
 }
 
 export function setSwaggerOperation(func: Function, options: OperationOptions) {
-    if (!Constants) {
-        return;
-    }
+  if (!Constants) {
+    return;
+  }
 
-    const meta = Reflect.getMetadata(Constants.DECORATORS.API_OPERATION, func) || {};
-    Reflect.defineMetadata(Constants.DECORATORS.API_OPERATION, _.assign(meta, options), func);
+  const meta = Reflect.getMetadata(Constants.DECORATORS.API_OPERATION, func) || {};
+  Reflect.defineMetadata(Constants.DECORATORS.API_OPERATION, _.assign(meta, options), func);
 }
 
 export function setSwaggerUseTags(func: Function, ...tags: string[]) {
-    if (!Constants) {
-        return;
-    }
+  if (!Constants) {
+    return;
+  }
 
-    const meta = Reflect.getMetadata(Constants.DECORATORS.API_USE_TAGS, func) || [];
-    Reflect.defineMetadata(Constants.DECORATORS.API_USE_TAGS, [...meta, ...tags], func);
+  const meta = Reflect.getMetadata(Constants.DECORATORS.API_USE_TAGS, func) || [];
+  Reflect.defineMetadata(Constants.DECORATORS.API_USE_TAGS, [...meta, ...tags], func);
 }
 
 export function setSwaggerModelProperty(func: Function, key: string, options: ModelPropertyOptions) {
-    if (!Constants) {
-        return;
-    }
+  if (!Constants) {
+    return;
+  }
 
-    const properties = Reflect.getMetadata(Constants.DECORATORS.API_MODEL_PROPERTIES_ARRAY, func) || [];
-    Reflect.defineMetadata(Constants.DECORATORS.API_MODEL_PROPERTIES_ARRAY, [...properties, `:${key}`], func);
+  const target = Object.getPrototypeOf(func) || func;
 
-    Reflect.defineMetadata(
-        Constants.DECORATORS.API_MODEL_PROPERTIES,
-        {
-            type: Reflect.getMetadata('design:type', func, key),
-            ..._.pickBy(options, _.negate(_.isUndefined))
-        },
-        func,
-        key
-    );
+  const properties = Reflect.getMetadata(Constants.DECORATORS.API_MODEL_PROPERTIES_ARRAY, target) || [];
+  Reflect.defineMetadata(Constants.DECORATORS.API_MODEL_PROPERTIES_ARRAY, [...properties, `:${key}`], target);
+
+  Reflect.defineMetadata(
+    Constants.DECORATORS.API_MODEL_PROPERTIES,
+    {
+      type: Reflect.getMetadata('design:type', target, key),
+      ..._.pickBy(options, _.negate(_.isUndefined)),
+    },
+    target,
+    key,
+  );
 }
