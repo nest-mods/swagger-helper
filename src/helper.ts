@@ -52,7 +52,7 @@
  */
 import 'reflect-metadata';
 import {Constants} from './swagger';
-import {ApiImplicitOptions, OperationOptions, ResponseOptions} from './interfaces';
+import {ApiImplicitOptions, ModelPropertyOptions, OperationOptions, ResponseOptions} from './interfaces';
 import * as _ from 'lodash';
 
 let helpers: typeof import('@nestjs/swagger/dist/decorators/helpers');
@@ -139,4 +139,23 @@ export function setSwaggerUseTags(func: Function, ...tags: string[]) {
 
     const meta = Reflect.getMetadata(Constants.DECORATORS.API_USE_TAGS, func) || [];
     Reflect.defineMetadata(Constants.DECORATORS.API_USE_TAGS, [...meta, ...tags], func);
+}
+
+export function setSwaggerModelProperty(func: Function, key: string, options: ModelPropertyOptions) {
+    if (!Constants) {
+        return;
+    }
+
+    const properties = Reflect.getMetadata(Constants.DECORATORS.API_MODEL_PROPERTIES_ARRAY, func) || [];
+    Reflect.defineMetadata(Constants.DECORATORS.API_MODEL_PROPERTIES_ARRAY, [...properties, `:${key}`], func);
+
+    Reflect.defineMetadata(
+        Constants.DECORATORS.API_MODEL_PROPERTIES,
+        {
+            type: Reflect.getMetadata('design:type', func, key),
+            ..._.pickBy(options, _.negate(_.isUndefined))
+        },
+        func,
+        key
+    );
 }
