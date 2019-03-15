@@ -146,7 +146,7 @@ export function setSwaggerModelProperty(func: Function, key: string, options: Mo
     return;
   }
 
-  const target = Object.getPrototypeOf(func) || func;
+  const target = func.prototype || func;
 
   const properties = Reflect.getMetadata(Constants.DECORATORS.API_MODEL_PROPERTIES_ARRAY, target) || [];
   Reflect.defineMetadata(Constants.DECORATORS.API_MODEL_PROPERTIES_ARRAY, [...properties, `:${key}`], target);
