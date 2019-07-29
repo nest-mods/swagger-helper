@@ -50,4 +50,4 @@
  *          ┗┻┛    ┗┻┛+ + + +
  * ----------- 永 无 BUG ------------
  */
-export * from './helper';
+export { SwaggerDecorators } from './decorator';

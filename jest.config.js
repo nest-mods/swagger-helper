@@ -51,17 +51,17 @@
  * ----------- 永 无 BUG ------------
  */
 module.exports = {
-    moduleFileExtensions: [
-        'js',
-        'json',
-        'ts',
-    ],
-    roots: ['<rootDir>/src', '<rootDir>/test'],
-    testRegex: '\\.(e2e-)?spec\\.ts$',
-    transform: {
-        '^.+\\.(t|j)s$': 'ts-jest',
-    },
-    coverageDirectory: '../coverage',
-    testEnvironment: 'node',
-    forceExit: true,
+  moduleFileExtensions: [
+    'js',
+    'json',
+    'ts',
+  ],
+  roots: ['<rootDir>/src', '<rootDir>/test'],
+  testRegex: '\\.(e2e-)?spec\\.ts$',
+  transform: {
+    '^.+\\.(t|j)s$': 'ts-jest',
+  },
+  coverageDirectory: '../coverage',
+  testEnvironment: 'node',
+  forceExit: true,
 };
