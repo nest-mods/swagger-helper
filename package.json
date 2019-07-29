@@ -4,6 +4,9 @@
   "description": "Swagger Helper",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "jest",
     "build": "tsc -p tsconfig.build.json",
