@@ -54,15 +54,17 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Test } from '@nestjs/testing';
-import * as supertest from 'supertest';
 import * as prettyjson from 'prettyjson';
+import * as supertest from 'supertest';
 import { SwaggerDecorators } from '../src';
+import ApiBasicAuth = SwaggerDecorators.ApiBasicAuth;
+import ApiBearerAuth = SwaggerDecorators.ApiBearerAuth;
 import ApiCreatedResponse = SwaggerDecorators.ApiCreatedResponse;
-import ApiModelProperty = SwaggerDecorators.ApiModelProperty;
-import ApiModelPropertyOptional = SwaggerDecorators.ApiModelPropertyOptional;
 import ApiOperation = SwaggerDecorators.ApiOperation;
 import ApiProduces = SwaggerDecorators.ApiProduces;
-import ApiUseTags = SwaggerDecorators.ApiUseTags;
+import ApiProperty = SwaggerDecorators.ApiProperty;
+import ApiPropertyOptional = SwaggerDecorators.ApiPropertyOptional;
+import ApiTags = SwaggerDecorators.ApiTags;
 
 enum Gender {
   MALE = 'MALE',
@@ -71,29 +73,31 @@ enum Gender {
 
 class DemoModel {
 
-  @ApiModelProperty({ description: 'person\'s name' })
+  @ApiProperty({ description: 'person\'s name' })
   name: string;
 
-  @ApiModelPropertyOptional({ type: 'int', minimum: 0, maximum: 120 })
+  @ApiPropertyOptional({ type: 'int', minimum: 0, maximum: 120 })
   age: number;
 
-  @ApiModelPropertyOptional({ type: 'string', enum: Gender })
+  @ApiPropertyOptional({ type: 'string', enum: Gender })
   gender: Gender;
 }
 
-@ApiUseTags('demo')
+@ApiTags('demo')
 @Controller('demo')
 class DemoController {
 
-  @ApiOperation({ title: 'hello' })
+  @ApiOperation({ description: 'hello' })
   @ApiProduces('text/html')
+  @ApiBasicAuth()
   @Get('hello')
   hello() {
     return 'hello';
   }
 
-  @ApiOperation({ title: 'create model' })
+  @ApiOperation({ description: 'create model' })
   @ApiCreatedResponse({ type: DemoModel })
+  @ApiBearerAuth()
   @Post('create')
   create(@Body() form: DemoModel) {
     return form;

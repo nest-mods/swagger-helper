@@ -1,304 +1,58 @@
-/*
- * MIT License
- *
- * Copyright (c) 2019 nest-mods
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
-/*
- * Created by Diluka on 2019-07-29.
- *
- *
- * ----------- 神 兽 佑 我 -----------
- *        ┏┓      ┏┓+ +
- *       ┏┛┻━━━━━━┛┻┓ + +
- *       ┃          ┃
- *       ┣     ━    ┃ ++ + + +
- *      ████━████   ┃+
- *       ┃          ┃ +
- *       ┃  ┴       ┃
- *       ┃          ┃ + +
- *       ┗━┓      ┏━┛  Code is far away from bug
- *         ┃      ┃       with the animal protecting
- *         ┃      ┃ + + + +
- *         ┃      ┃
- *         ┃      ┃ +
- *         ┃      ┃      +  +
- *         ┃      ┃    +
- *         ┃      ┗━━━┓ + +
- *         ┃          ┣┓
- *         ┃          ┏┛
- *         ┗┓┓┏━━━━┳┓┏┛ + + + +
- *          ┃┫┫    ┃┫┫
- *          ┗┻┛    ┗┻┛+ + + +
- * ----------- 永 无 BUG ------------
- */
-let Swagger: typeof import('@nestjs/swagger');
+let D: typeof import('@nestjs/swagger/dist/decorators');
 try {
-  Swagger = require('@nestjs/swagger');
+    D = require('@nestjs/swagger/dist/decorators');
 } catch (ingored) {
 }
 
 type DecoratorType = (target: object, key?: any, descriptor?: any) => any
-type SwaggerEnumType = import('@nestjs/swagger/dist/types/swagger-enum.type').SwaggerEnumType
-type ResponseMetadata = import('@nestjs/swagger').ResponseMetadata
 
 function applySwagger(fn: string, ...args: any[]): DecoratorType {
-  return (target: object, key?: string | symbol, descriptor?: any) => {
-    if (Swagger && Swagger[fn]) {
-      Swagger[fn](...args)(target, key, descriptor);
-    }
-  };
+    return (target: object, key?: string | symbol, descriptor?: any) => D && D[fn] && D[fn](...args)(target, key, descriptor);
 }
 
 export namespace SwaggerDecorators {
-  export function ApiBearerAuth() {
-    return applySwagger('ApiBearerAuth', ...arguments);
-  }
-
-  export function ApiConsumes(...mimeTypes: string[]) {
-    return applySwagger('ApiConsumes', ...arguments);
-  }
-
-  export function ApiExcludeEndpoint() {
-    return applySwagger('ApiExcludeEndpoint');
-  }
-
-  export function ApiImplicitBody(metadata: {
-    name: string;
-    type: any;
-    description?: string;
-    required?: boolean;
-    isArray?: boolean;
-  }) {
-    return applySwagger('ApiImplicitBody', ...arguments);
-  }
-
-  export function ApiImplicitFile(metadata: {
-    name: string;
-    description?: string;
-    required?: boolean;
-  }) {
-    return applySwagger('ApiImplicitFile', ...arguments);
-  }
-
-  export function ApiImplicitHeader(metadata: {
-    name: string;
-    description?: string;
-    required?: boolean;
-  }) {
-    return applySwagger('ApiImplicitHeader', ...arguments);
-  }
-
-  export function ApiImplicitHeaders(metadata: {
-    name: string;
-    description?: string;
-    required?: boolean;
-  }) {
-    return applySwagger('ApiImplicitHeaders', ...arguments);
-  }
-
-  export function ApiImplicitParam(metadata: {
-    name: string;
-    description?: string;
-    required?: boolean;
-    type?: any;
-  }) {
-    return applySwagger('ApiImplicitParam', ...arguments);
-  }
-
-  export function ApiImplicitQuery(metadata: {
-    name: string;
-    description?: string;
-    required?: boolean;
-    type?: any;
-    isArray?: boolean;
-    enum?: SwaggerEnumType;
-    collectionFormat?: 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
-  }) {
-    return applySwagger('ApiImplicitQuery', ...arguments);
-  }
-
-  export function ApiModelProperty(metadata?: {
-    description?: string;
-    required?: boolean;
-    type?: any;
-    isArray?: boolean;
-    collectionFormat?: string;
-    default?: any;
-    enum?: SwaggerEnumType;
-    format?: string;
-    in?: string;
-    multipleOf?: number;
-    maximum?: number;
-    exclusiveMaximum?: number;
-    minimum?: number;
-    exclusiveMinimum?: number;
-    maxLength?: number;
-    minLength?: number;
-    pattern?: string;
-    maxItems?: number;
-    minItems?: number;
-    uniqueItems?: boolean;
-    maxProperties?: number;
-    minProperties?: number;
-    readOnly?: boolean;
-    xml?: any;
-    example?: any;
-  }) {
-    return applySwagger('ApiModelProperty', ...arguments);
-  }
-
-  export function ApiModelPropertyOptional(metadata?: {
-    description?: string;
-    type?: any;
-    isArray?: boolean;
-    collectionFormat?: string;
-    default?: any;
-    enum?: SwaggerEnumType;
-    format?: string;
-    in?: string;
-    multipleOf?: number;
-    maximum?: number;
-    exclusiveMaximum?: number;
-    minimum?: number;
-    exclusiveMinimum?: number;
-    maxLength?: number;
-    minLength?: number;
-    pattern?: string;
-    maxItems?: number;
-    minItems?: number;
-    uniqueItems?: boolean;
-    maxProperties?: number;
-    minProperties?: number;
-    readOnly?: boolean;
-    xml?: any;
-    example?: any;
-  }) {
-    return applySwagger('ApiModelPropertyOptional', ...arguments);
-  }
-
-  export function ApiResponseModelProperty(metadata?: {
-    type?: any;
-    example?: any;
-  }) {
-    return applySwagger('ApiResponseModelProperty', ...arguments);
-  }
-
-  export function ApiOAuth2Auth(scopes?: string[]) {
-    return applySwagger('ApiOAuth2Auth', ...arguments);
-  }
-
-  export function ApiOperation(metadata: {
-    title: string;
-    description?: string;
-    operationId?: string;
-    deprecated?: boolean;
-  }) {
-    return applySwagger('ApiOperation', ...arguments);
-  }
-
-  export function ApiProduces(...mimeTypes: string[]) {
-    return applySwagger('ApiProduces', ...arguments);
-  }
-
-  export function ApiResponse(metadata: {
-    status: number;
-    headers?: any;
-  } & ResponseMetadata) {
-    return applySwagger('ApiResponse', ...arguments);
-  }
-
-  export function ApiOkResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiOkResponse', ...arguments);
-  }
-
-  export function ApiCreatedResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiCreatedResponse', ...arguments);
-  }
-
-  export function ApiBadRequestResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiBadRequestResponse', ...arguments);
-  }
-
-  export function ApiNotFoundResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiNotFoundResponse', ...arguments);
-  }
-
-  export function ApiInternalServerErrorResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiInternalServerErrorResponse', ...arguments);
-  }
-
-  export function ApiBadGatewayResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiBadGatewayResponse', ...arguments);
-  }
-
-  export function ApiConflictResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiConflictResponse', ...arguments);
-  }
-
-  export function ApiForbiddenResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiForbiddenResponse', ...arguments);
-  }
-
-  export function ApiGatewayTimeoutResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiGatewayTimeoutResponse', ...arguments);
-  }
-
-  export function ApiGoneResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiGoneResponse', ...arguments);
-  }
-
-  export function ApiMethodNotAllowedResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiMethodNotAllowedResponse', ...arguments);
-  }
-
-  export function ApiNotAcceptableResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiNotAcceptableResponse', ...arguments);
-  }
-
-  export function ApiNotImplementedResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiNotImplementedResponse', ...arguments);
-  }
-
-  export function ApiPayloadTooLargeResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiPayloadTooLargeResponse', ...arguments);
-  }
-
-  export function ApiRequestTimeoutResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiRequestTimeoutResponse', ...arguments);
-  }
-
-  export function ApiServiceUnavailableResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiServiceUnavailableResponse', ...arguments);
-  }
-
-  export function ApiUnprocessableEntityResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiUnprocessableEntityResponse', ...arguments);
-  }
-
-  export function ApiUnsupportedMediaTypeResponse(metadata: ResponseMetadata) {
-    return applySwagger('ApiUnsupportedMediaTypeResponse', ...arguments);
-  }
-
-  export function ApiUseTags(...tags: string[]) {
-    return applySwagger('ApiUseTags', ...arguments);
-  }
+  export const ApiBasicAuth: typeof D.ApiBasicAuth = (...args: any[]) => applySwagger('ApiBasicAuth', ...args);
+  export const ApiBearerAuth: typeof D.ApiBearerAuth = (...args: any[]) => applySwagger('ApiBearerAuth', ...args);
+  export const ApiBody: typeof D.ApiBody = (...args: any[]) => applySwagger('ApiBody', ...args);
+  export const ApiConsumes: typeof D.ApiConsumes = (...args: any[]) => applySwagger('ApiConsumes', ...args);
+  export const ApiExcludeEndpoint: typeof D.ApiExcludeEndpoint = (...args: any[]) => applySwagger('ApiExcludeEndpoint', ...args);
+  export const ApiExtraModels: typeof D.ApiExtraModels = (...args: any[]) => applySwagger('ApiExtraModels', ...args);
+  export const ApiHeader: typeof D.ApiHeader = (...args: any[]) => applySwagger('ApiHeader', ...args);
+  export const ApiHeaders: typeof D.ApiHeaders = (...args: any[]) => applySwagger('ApiHeaders', ...args);
+  export const ApiHideProperty: typeof D.ApiHideProperty = (...args: any[]) => applySwagger('ApiHideProperty', ...args);
+  export const ApiOAuth2: typeof D.ApiOAuth2 = (...args: any[]) => applySwagger('ApiOAuth2', ...args);
+  export const ApiOperation: typeof D.ApiOperation = (...args: any[]) => applySwagger('ApiOperation', ...args);
+  export const ApiParam: typeof D.ApiParam = (...args: any[]) => applySwagger('ApiParam', ...args);
+  export const ApiProduces: typeof D.ApiProduces = (...args: any[]) => applySwagger('ApiProduces', ...args);
+  export const ApiProperty: typeof D.ApiProperty = (...args: any[]) => applySwagger('ApiProperty', ...args);
+  export const ApiPropertyOptional: typeof D.ApiPropertyOptional = (...args: any[]) => applySwagger('ApiPropertyOptional', ...args);
+  export const ApiResponseProperty: typeof D.ApiResponseProperty = (...args: any[]) => applySwagger('ApiResponseProperty', ...args);
+  export const ApiQuery: typeof D.ApiQuery = (...args: any[]) => applySwagger('ApiQuery', ...args);
+  export const ApiResponse: typeof D.ApiResponse = (...args: any[]) => applySwagger('ApiResponse', ...args);
+  export const ApiOkResponse: typeof D.ApiOkResponse = (...args: any[]) => applySwagger('ApiOkResponse', ...args);
+  export const ApiCreatedResponse: typeof D.ApiCreatedResponse = (...args: any[]) => applySwagger('ApiCreatedResponse', ...args);
+  export const ApiAcceptedResponse: typeof D.ApiAcceptedResponse = (...args: any[]) => applySwagger('ApiAcceptedResponse', ...args);
+  export const ApiNoContentResponse: typeof D.ApiNoContentResponse = (...args: any[]) => applySwagger('ApiNoContentResponse', ...args);
+  export const ApiMovedPermanentlyResponse: typeof D.ApiMovedPermanentlyResponse = (...args: any[]) => applySwagger('ApiMovedPermanentlyResponse', ...args);
+  export const ApiBadRequestResponse: typeof D.ApiBadRequestResponse = (...args: any[]) => applySwagger('ApiBadRequestResponse', ...args);
+  export const ApiUnauthorizedResponse: typeof D.ApiUnauthorizedResponse = (...args: any[]) => applySwagger('ApiUnauthorizedResponse', ...args);
+  export const ApiTooManyRequestsResponse: typeof D.ApiTooManyRequestsResponse = (...args: any[]) => applySwagger('ApiTooManyRequestsResponse', ...args);
+  export const ApiNotFoundResponse: typeof D.ApiNotFoundResponse = (...args: any[]) => applySwagger('ApiNotFoundResponse', ...args);
+  export const ApiInternalServerErrorResponse: typeof D.ApiInternalServerErrorResponse = (...args: any[]) => applySwagger('ApiInternalServerErrorResponse', ...args);
+  export const ApiBadGatewayResponse: typeof D.ApiBadGatewayResponse = (...args: any[]) => applySwagger('ApiBadGatewayResponse', ...args);
+  export const ApiConflictResponse: typeof D.ApiConflictResponse = (...args: any[]) => applySwagger('ApiConflictResponse', ...args);
+  export const ApiForbiddenResponse: typeof D.ApiForbiddenResponse = (...args: any[]) => applySwagger('ApiForbiddenResponse', ...args);
+  export const ApiGatewayTimeoutResponse: typeof D.ApiGatewayTimeoutResponse = (...args: any[]) => applySwagger('ApiGatewayTimeoutResponse', ...args);
+  export const ApiGoneResponse: typeof D.ApiGoneResponse = (...args: any[]) => applySwagger('ApiGoneResponse', ...args);
+  export const ApiMethodNotAllowedResponse: typeof D.ApiMethodNotAllowedResponse = (...args: any[]) => applySwagger('ApiMethodNotAllowedResponse', ...args);
+  export const ApiNotAcceptableResponse: typeof D.ApiNotAcceptableResponse = (...args: any[]) => applySwagger('ApiNotAcceptableResponse', ...args);
+  export const ApiNotImplementedResponse: typeof D.ApiNotImplementedResponse = (...args: any[]) => applySwagger('ApiNotImplementedResponse', ...args);
+  export const ApiPayloadTooLargeResponse: typeof D.ApiPayloadTooLargeResponse = (...args: any[]) => applySwagger('ApiPayloadTooLargeResponse', ...args);
+  export const ApiRequestTimeoutResponse: typeof D.ApiRequestTimeoutResponse = (...args: any[]) => applySwagger('ApiRequestTimeoutResponse', ...args);
+  export const ApiServiceUnavailableResponse: typeof D.ApiServiceUnavailableResponse = (...args: any[]) => applySwagger('ApiServiceUnavailableResponse', ...args);
+  export const ApiUnprocessableEntityResponse: typeof D.ApiUnprocessableEntityResponse = (...args: any[]) => applySwagger('ApiUnprocessableEntityResponse', ...args);
+  export const ApiUnsupportedMediaTypeResponse: typeof D.ApiUnsupportedMediaTypeResponse = (...args: any[]) => applySwagger('ApiUnsupportedMediaTypeResponse', ...args);
+  export const ApiDefaultResponse: typeof D.ApiDefaultResponse = (...args: any[]) => applySwagger('ApiDefaultResponse', ...args);
+  export const ApiSecurity: typeof D.ApiSecurity = (...args: any[]) => applySwagger('ApiSecurity', ...args);
+  export const ApiTags: typeof D.ApiTags = (...args: any[]) => applySwagger('ApiTags', ...args);
 }
